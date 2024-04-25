@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ChuntFM Artwork Generator</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="preload" href="./assets/fonts/GTMaru-Light.otf" as="font" type="font/otf" crossorigin />
+	<link rel="preload" href="./assets/fonts/GTMaru-Black.otf" as="font" type="font/otf" crossorigin />
+</head>
+
+<body>
+	<div class="main-wrapper">
+		<div class="artwork-wrapper" id="artwork-wrapper">
+			<canvas id="canvas" width=1080 height=1080></canvas>
+		</div>
+		<div class="controls-wrapper">
+			<div class="main-header">
+				<img src="./assets/logo.svg" alt="ChuntFM Logo" height="64px">
+				<h1>ChuntFM Artwork Generator</h1>
+			</div>
+			<label for="show-name">Show Name</label>
+			<input type="text" name="show-name" id="show-name">
+			<label for="show-host">Host</label>
+			<input type="text" name="show-host" id="show-host">
+			<label for="show-date">Show Date</label>
+			<input type="date" name="show-date" id="show-date" min="2022-03-14">
+			<label for="text-position">Text Position</label>
+			<input type="range" name="text-position" id="text-position" min="0" max="100" value="0">
+			<div class="colour-options">
+				<div class="colour-wrapper">
+					<div class="flex-centered-col">
+						<label for="accent-colour">Accent</label>
+						<input type="color" name="accent-colour" id="accent-colour"
+							value="#000000">
+					</div>
+					<div class="flex-centered-col">
+						<label for="accent-opacity">Opacity</label>
+						<input type="range" name="accent-opacity" id="accent-opacity" min="0"
+							max="100" value="100">
+					</div>
+				</div>
+				<div class="colour-wrapper">
+					<div class="flex-centered-col">
+						<label for="background-colour">BG</label>
+						<input type="color" name="background-colour" id="background-colour"
+							value="#ffffff">
+					</div>
+					<div class="flex-centered-col">
+						<label for="background-opacity">Opacity</label>
+						<input type="range" name="background-opacity" id="background-opacity"
+							min="0" max="100" value="100">
+					</div>
+				</div>
+			</div>
+			<label for="show-img">Upload Show Image</label>
+			<input type="file" name="show-img" id="show-img" accept="image/png, image/jpeg">
+			<div class="main-footer">
+				<div class="flex-centered-col">
+					<p>Image Sizing</p>
+					<div>
+						<input type="radio" name="img-sizing" id="img-cover" checked>
+						<label for="img-cover">Cover</label>
+						<input type="radio" name="img-sizing" id="img-contain">
+						<label for="img-contain">Contain</label>
+					</div>
+				</div>
+				<div class="flex-centered-col">
+					<p>Graphical Elements</p>
+					<div class="graphical-elements-wrapper">
+						<label for="ge1"><input type="checkbox" name="ge1" id="ge1"
+								checked>1</label>
+						<label for="ge2"><input type="checkbox" name="ge2" id="ge2"
+								checked>2</label>
+						<label for="ge3"><input type="checkbox" name="ge3" id="ge3"
+								checked>3</label>
+						<label for="ge4"><input type="checkbox" name="ge4" id="ge4"
+								checked>4</label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="save-wrapper">
+			<button type="button" id="save-artwork">
+				Save Artwork
+			</button>
+		</div>
+	</div>
+	<!-- <script src="script.js" type="module"></script> -->
+	<script src="https://unpkg.com/fabric@5.3.0/dist/fabric.min.js"></script>
+	<script src="./script.js"></script>
+</body>
+
+</html>
