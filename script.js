@@ -1,11 +1,13 @@
+let html5Canvas = document.getElementById("canvas");
+const CANVASSIZE = html5Canvas.width;
 const MARGIN = 40;
 const YBASE = MARGIN;
-const TEXTWIDTH = 850;
+const TEXTWIDTH = CANVASSIZE - (2 * MARGIN);
+const LINEHEIGHT = 0.915;
+const CHARSPACING = -50;
 const CHUNT0DATE = new Date("2022-03-14");
 
 // Resize HTML5 Canvas to fit parent wrapper
-let html5Canvas = document.getElementById("canvas");
-const CANVASSIZE = html5Canvas.width;
 html5Canvas.style.width = "100%";
 html5Canvas.style.height = "100%";
 
@@ -40,10 +42,11 @@ let showNameText = new fabric.Textbox(showName, {
 	fontSize: 68,
 	fontFamily: "GT Maru",
 	fontWeight: "bold",
+	lineHeight: LINEHEIGHT,
 	fill: accentColour,
 	opacity: +accentOpacity / 100,
 	visible: textBool,
-	charSpacing: -50,
+	charSpacing: CHARSPACING,
 	width: TEXTWIDTH,
 	left: MARGIN,
 	top: YBASE,
@@ -54,10 +57,11 @@ let showNameText = new fabric.Textbox(showName, {
 let showHostText = new fabric.Textbox("w/ " + showHost, {
 	fontSize: 68,
 	fontFamily: "GT Maru",
+	lineHeight: LINEHEIGHT,
 	fill: accentColour,
 	opacity: +accentOpacity / 100,
 	visible: textBool,
-	charSpacing: -50,
+	charSpacing: CHARSPACING,
 	width: TEXTWIDTH,
 	left: MARGIN,
 	top: YBASE + showNameText.height + showNameText.lineHeight,
@@ -120,7 +124,7 @@ let link = new fabric.Textbox("chunt.org", {
 	fill: accentColour,
 	opacity: +accentOpacity / 100,
 	visible: linkBool,
-	charSpacing: -50,
+	charSpacing: -110,
 	left: CANVASSIZE - MARGIN,
 	top: CANVASSIZE - MARGIN,
 	originX: "right",
@@ -129,7 +133,7 @@ let link = new fabric.Textbox("chunt.org", {
 });
 canvas.add(link);
 
-let counter = new fabric.IText("CHUNT " + chuntDays, {
+let counterDays = new fabric.IText(chuntDays.toString(), {
 	fontSize: 45,
 	fontFamily: "GT Maru",
 	fontWeight: "bold",
@@ -142,8 +146,25 @@ let counter = new fabric.IText("CHUNT " + chuntDays, {
 	originX: "right",
 	originY: "bottom",
 	selectable: false,
-});
-canvas.add(counter);
+})
+canvas.add(counterDays)
+
+let counterStart = new fabric.IText("CHUNT ", {
+	fontSize: 45,
+	fontFamily: "GT Maru",
+	fontWeight: "bold",
+	fill: accentColour,
+	opacity: +accentOpacity / 100,
+	visible: counterBool,
+	charSpacing: -90,
+	left: CANVASSIZE - (2 * MARGIN) - link.width - counterDays.width,
+	top: CANVASSIZE - MARGIN,
+	originX: "right",
+	originY: "bottom",
+	selectable: false,
+})
+canvas.add(counterStart)
+
 
 canvas.add(showNameText);
 document.getElementById("show-name").addEventListener('input', function(e) {
@@ -155,7 +176,7 @@ document.getElementById("show-name").addEventListener('input', function(e) {
 		top: YBASE + yOffset
 	})
 	showHostText.set({
-		top: YBASE + yOffset + showNameText.height + showNameText.lineHeight,
+		top: YBASE + yOffset + showNameText.height - 6
 	})
 	canvas.renderAll()
 });
@@ -170,11 +191,10 @@ document.getElementById("show-host").addEventListener('input', function(e) {
 });
 
 document.getElementById("show-date").addEventListener('input', function(e) {
-	console.log('date changed')
 	showDate = new Date(e.target.value)
 	chuntDays = Math.ceil((showDate - CHUNT0DATE) / (1000 * 3600 * 24)) || Math.floor((new Date(Date()) - CHUNT0DATE) / (1000 * 3600 * 24));
-	console.log(chuntDays)
-	counter.set({ text: "CHUNT " + chuntDays })
+	counterDays.set({ text: chuntDays.toString() })
+	counterStart.set({ left: CANVASSIZE - (2 * MARGIN) - link.width - counterDays.width })
 	canvas.renderAll()
 });
 
@@ -219,7 +239,8 @@ document.getElementById("accent-colour").addEventListener('input', function(e) {
 	accentColour = e.target.value
 	showNameText.set({ fill: accentColour })
 	showHostText.set({ fill: accentColour })
-	counter.set({ fill: accentColour })
+	counterStart.set({ fill: accentColour })
+	counterDays.set({ fill: accentColour })
 	link.set({ fill: accentColour })
 	var _logo = canvas.getObjects("path")[0]
 	_logo.set({ fill: accentColour })
@@ -230,7 +251,8 @@ document.getElementById("accent-opacity").addEventListener('input', function(e) 
 	accentOpacity = e.target.value
 	showNameText.set({ opacity: +accentOpacity / 100 })
 	showHostText.set({ opacity: +accentOpacity / 100 })
-	counter.set({ opacity: +accentOpacity / 100 })
+	counterStart.set({ opacity: +accentOpacity / 100 })
+	counterDays.set({ opacity: +accentOpacity / 100 })
 	link.set({ opacity: +accentOpacity / 100 })
 	var _logo = canvas.getObjects("path")[0]
 	_logo.set({ opacity: +accentOpacity / 100 })
@@ -265,7 +287,8 @@ document.getElementById("ge2").addEventListener('click', function(e) {
 
 document.getElementById("ge3").addEventListener('click', function(e) {
 	counterBool = e.target["checked"]
-	counter.set({ visible: counterBool })
+	counterStart.set({ visible: counterBool })
+	counterDays.set({ visible: counterBool })
 	canvas.renderAll()
 })
 
@@ -276,7 +299,6 @@ document.getElementById("ge4").addEventListener('click', function(e) {
 })
 
 document.getElementById("save-artwork").addEventListener('click', function() {
-	console.log('save clicked')
 	url = canvas.toDataURL({
 		format: 'png',
 		multiplier: CANVASSIZE / displaySize,
@@ -305,12 +327,4 @@ window.addEventListener('resize', function() {
 	canvas.setWidth(displaySize);
 	canvas.setHeight(displaySize);
 });
-
-// function saveImage() {
-// 	savedImageDataURL = canvas.toDataURL({
-// 		format: 'png',
-// 		multiplier: CANVASSIZE / displaySize,
-// 	});
-// 	console.log(savedImageDataURL)
-// }
 

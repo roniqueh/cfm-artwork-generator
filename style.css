@@ -126,6 +126,8 @@ textarea:not([rows]) {
 input[type="range"],
 input[type="radio"],
 input[type="color"],
+label[for*="img"],
+button,
 .graphical-elements-wrapper>label {
 	cursor: pointer;
 }
@@ -144,7 +146,7 @@ input[type="color"],
 	margin: var(--spacing);
 }
 
-.artwork-wrapper,
+#canvas,
 .controls-wrapper,
 .save-wrapper {
 	border: 4px solid black;
