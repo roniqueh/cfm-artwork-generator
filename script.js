@@ -5,9 +5,10 @@ const YBASE = MARGIN;
 const TEXTWIDTH = CANVASSIZE - (2 * MARGIN);
 const LINEHEIGHT = 0.915;
 const CHARSPACING = -50;
+const LINKWIDTH = 195;
 const CHUNT0DATE = new Date("2022-03-14");
 
-// Resize HTML5 Canvas to fit parent wrapper
+// Resize HTML5 Canvas to fit parent wrapper (size controlled by CSS)
 html5Canvas.style.width = "100%";
 html5Canvas.style.height = "100%";
 
@@ -38,6 +39,62 @@ let logoBool = document.getElementById("ge2")['checked'];
 let counterBool = document.getElementById("ge3")['checked'];
 let linkBool = document.getElementById("ge4")['checked'];
 
+// Helper functions
+function getObjectById(id) {
+	for (let i = 0; i < canvas.getObjects().length; i++) {
+		let object = canvas.getObjects()[i]
+		if (object.id === id) {
+			return object
+		}
+	}
+}
+
+function setSVGColour(id, color) {
+	let SVGObject = getObjectById(id);
+	if (typeof SVGObject._objects !== "undefined") {
+		SVGObject.set({ fill: color })
+		for (let j = 0; j < SVGObject._objects.length; j++) {
+			let SVGObjectPath = SVGObject._objects[j]
+			SVGObjectPath.set({ fill: color })
+		}
+	} else {
+		SVGObject.set({ fill: color })
+	}
+}
+
+function setSVGOpacity(id, opacity) {
+	let SVGObject = getObjectById(id);
+	SVGObject.set({ opacity: opacity })
+}
+
+function setSVGVisibility(id, visibility) {
+	let SVGObject = getObjectById(id);
+	SVGObject.set({ visible: visibility })
+}
+
+function setImageToBackground(img, imgSizing) {
+	let scaleRatio;
+	switch (imgSizing) {
+		case 'img-cover':
+			scaleRatio = Math.max(CANVASSIZE / img.width, CANVASSIZE / img.height);
+			break
+		case 'img-contain':
+			scaleRatio = Math.min(CANVASSIZE / img.width, CANVASSIZE / img.height);
+			break
+	}
+
+	canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+		scaleX: scaleRatio,
+		scaleY: scaleRatio,
+		left: CANVASSIZE / 2,
+		top: CANVASSIZE / 2,
+		originX: 'middle',
+		originY: 'middle',
+		selectable: true,
+	});
+}
+
+// Defining fabric objects
 let showNameText = new fabric.Textbox(showName, {
 	fontSize: 68,
 	fontFamily: "GT Maru",
@@ -69,8 +126,9 @@ let showHostText = new fabric.Textbox("w/ " + showHost, {
 	selectable: false,
 });
 
-logo = new fabric.loadSVGFromURL('./assets/logo.svg', function(objects, options) {
+let logo = new fabric.loadSVGFromURL('./assets/logo.svg', function(objects, options) {
 	var svgData = fabric.util.groupSVGElements(objects, options);
+	svgData.id = "logo";
 	svgData.top = CANVASSIZE - MARGIN;
 	svgData.left = MARGIN;
 	svgData.originY = "bottom";
@@ -85,6 +143,8 @@ logo = new fabric.loadSVGFromURL('./assets/logo.svg', function(objects, options)
 });
 
 let background = new fabric.Rect({
+	// Ensure canvas is filled by background colour 
+	// This goes over the background image (if present)
 	width: CANVASSIZE * 2,
 	height: CANVASSIZE * 2,
 	top: -100,
@@ -95,43 +155,23 @@ let background = new fabric.Rect({
 });
 canvas.add(background);
 
-
-function setImageToBackground(img, imgSizing) {
-	let scaleRatio;
-	switch (imgSizing) {
-		case 'img-cover':
-			scaleRatio = Math.max(CANVASSIZE / img.width, CANVASSIZE / img.height);
-			break
-		case 'img-contain':
-			scaleRatio = Math.min(CANVASSIZE / img.width, CANVASSIZE / img.height);
-			break
+let link = new fabric.loadSVGFromURL('./assets/link.svg', function(objects, options) {
+	var svgData = fabric.util.groupSVGElements(objects, options);
+	svgData.id = "link";
+	svgData.top = CANVASSIZE - MARGIN - 2;
+	svgData.left = CANVASSIZE - MARGIN;
+	svgData.originX = "right";
+	svgData.originY = "bottom";
+	svgData.stroke = 0;
+	svgData.selectable = false;
+	svgData.opacity = +accentOpacity / 100;
+	svgData.visible = linkBool;
+	for (let i = 0; i < objects.length; i++) {
+		objects[i].fill = accentColour
 	}
-
-	canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-		scaleX: scaleRatio,
-		scaleY: scaleRatio,
-		left: CANVASSIZE / 2,
-		top: CANVASSIZE / 2,
-		originX: 'middle',
-		originY: 'middle',
-		selectable: true,
-	});
-}
-
-let link = new fabric.Textbox("chunt.org", {
-	fontSize: 45,
-	fontFamily: "GT Maru",
-	fill: accentColour,
-	opacity: +accentOpacity / 100,
-	visible: linkBool,
-	charSpacing: -110,
-	left: CANVASSIZE - MARGIN,
-	top: CANVASSIZE - MARGIN,
-	originX: "right",
-	originY: "bottom",
-	selectable: false,
+	svgData.fill = accentColour;
+	canvas.add(svgData);
 });
-canvas.add(link);
 
 let counterDays = new fabric.IText(chuntDays.toString(), {
 	fontSize: 45,
@@ -140,8 +180,8 @@ let counterDays = new fabric.IText(chuntDays.toString(), {
 	fill: accentColour,
 	opacity: +accentOpacity / 100,
 	visible: counterBool,
-	charSpacing: -50,
-	left: CANVASSIZE - (2 * MARGIN) - link.width,
+	// charSpacing: 30,
+	left: CANVASSIZE - (2 * MARGIN) - LINKWIDTH,
 	top: CANVASSIZE - MARGIN,
 	originX: "right",
 	originY: "bottom",
@@ -149,23 +189,26 @@ let counterDays = new fabric.IText(chuntDays.toString(), {
 })
 canvas.add(counterDays)
 
-let counterStart = new fabric.IText("CHUNT ", {
-	fontSize: 45,
-	fontFamily: "GT Maru",
-	fontWeight: "bold",
-	fill: accentColour,
-	opacity: +accentOpacity / 100,
-	visible: counterBool,
-	charSpacing: -90,
-	left: CANVASSIZE - (2 * MARGIN) - link.width - counterDays.width,
-	top: CANVASSIZE - MARGIN,
-	originX: "right",
-	originY: "bottom",
-	selectable: false,
-})
-canvas.add(counterStart)
+let counterStart = new fabric.loadSVGFromURL('./assets/counter-start.svg', function(objects, options) {
+	var svgData = fabric.util.groupSVGElements(objects, options);
+	svgData.id = "counterStart";
+	svgData.top = CANVASSIZE - MARGIN - 4.5;
+	svgData.left = CANVASSIZE - (2 * MARGIN) - LINKWIDTH - counterDays.width - 4;
+	svgData.originX = "right";
+	svgData.originY = "bottom";
+	svgData.scaleToHeight(47);
+	svgData.stroke = 0;
+	svgData.selectable = false;
+	svgData.opacity = +accentOpacity / 100;
+	svgData.visible = counterBool;
+	for (let i = 0; i < objects.length; i++) {
+		objects[i].fill = accentColour
+	}
+	svgData.fill = accentColour;
+	canvas.add(svgData);
+});
 
-
+// Adding event listeners
 canvas.add(showNameText);
 document.getElementById("show-name").addEventListener('input', function(e) {
 	showName = e.target.value
@@ -194,7 +237,7 @@ document.getElementById("show-date").addEventListener('input', function(e) {
 	showDate = new Date(e.target.value)
 	chuntDays = Math.ceil((showDate - CHUNT0DATE) / (1000 * 3600 * 24)) || Math.floor((new Date(Date()) - CHUNT0DATE) / (1000 * 3600 * 24));
 	counterDays.set({ text: chuntDays.toString() })
-	counterStart.set({ left: CANVASSIZE - (2 * MARGIN) - link.width - counterDays.width })
+	getObjectById("counterStart").set({ left: CANVASSIZE - (2 * MARGIN) - LINKWIDTH - counterDays.width })
 	canvas.renderAll()
 });
 
@@ -239,11 +282,11 @@ document.getElementById("accent-colour").addEventListener('input', function(e) {
 	accentColour = e.target.value
 	showNameText.set({ fill: accentColour })
 	showHostText.set({ fill: accentColour })
-	counterStart.set({ fill: accentColour })
 	counterDays.set({ fill: accentColour })
-	link.set({ fill: accentColour })
-	var _logo = canvas.getObjects("path")[0]
-	_logo.set({ fill: accentColour })
+	setSVGColour("logo", accentColour)
+	setSVGColour("link", accentColour)
+	setSVGColour("counterStart", accentColour)
+	console.log(canvas.getObjects())
 	canvas.renderAll()
 })
 
@@ -251,11 +294,10 @@ document.getElementById("accent-opacity").addEventListener('input', function(e) 
 	accentOpacity = e.target.value
 	showNameText.set({ opacity: +accentOpacity / 100 })
 	showHostText.set({ opacity: +accentOpacity / 100 })
-	counterStart.set({ opacity: +accentOpacity / 100 })
 	counterDays.set({ opacity: +accentOpacity / 100 })
-	link.set({ opacity: +accentOpacity / 100 })
-	var _logo = canvas.getObjects("path")[0]
-	_logo.set({ opacity: +accentOpacity / 100 })
+	setSVGOpacity("link", +accentOpacity / 100)
+	setSVGOpacity("logo", +accentOpacity / 100)
+	setSVGOpacity("counterStart", +accentOpacity / 100)
 	canvas.renderAll()
 })
 
@@ -280,21 +322,20 @@ document.getElementById("ge1").addEventListener('click', function(e) {
 
 document.getElementById("ge2").addEventListener('click', function(e) {
 	logoBool = e.target["checked"]
-	var _logo = canvas.getObjects("path")[0]
-	_logo.set({ visible: logoBool })
+	setSVGVisibility("logo", logoBool)
 	canvas.renderAll()
 })
 
 document.getElementById("ge3").addEventListener('click', function(e) {
 	counterBool = e.target["checked"]
-	counterStart.set({ visible: counterBool })
+	setSVGVisibility("counterStart", counterBool)
 	counterDays.set({ visible: counterBool })
 	canvas.renderAll()
 })
 
 document.getElementById("ge4").addEventListener('click', function(e) {
 	linkBool = e.target["checked"]
-	link.set({ visible: linkBool })
+	setSVGVisibility("link", linkBool)
 	canvas.renderAll()
 })
 
