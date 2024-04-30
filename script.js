@@ -49,6 +49,17 @@ function getObjectById(id) {
 	}
 }
 
+function positionText() {
+	maxYOffset = CANVASSIZE - (4 * MARGIN) - showNameText.height - showHostText.height
+	yOffset = (+textPosition / 100) * maxYOffset
+	showNameText.set({
+		top: YBASE + yOffset
+	})
+	showHostText.set({
+		top: YBASE + yOffset + showNameText.height - 6
+	})
+}
+
 function setSVGColour(id, color) {
 	let SVGObject = getObjectById(id);
 	if (typeof SVGObject._objects !== "undefined") {
@@ -180,7 +191,6 @@ let counterDays = new fabric.IText(chuntDays.toString(), {
 	fill: accentColour,
 	opacity: +accentOpacity / 100,
 	visible: counterBool,
-	// charSpacing: 30,
 	left: CANVASSIZE - (2 * MARGIN) - LINKWIDTH,
 	top: CANVASSIZE - MARGIN,
 	originX: "right",
@@ -213,14 +223,7 @@ canvas.add(showNameText);
 document.getElementById("show-name").addEventListener('input', function(e) {
 	showName = e.target.value
 	showNameText.set({ text: showName })
-	maxYOffset = CANVASSIZE - (4 * MARGIN) - showNameText.height - showHostText.height
-	yOffset = (+textPosition / 100) * maxYOffset
-	showNameText.set({
-		top: YBASE + yOffset
-	})
-	showHostText.set({
-		top: YBASE + yOffset + showNameText.height - 6
-	})
+	positionText()
 	canvas.renderAll()
 });
 
@@ -230,6 +233,7 @@ document.getElementById("show-host").addEventListener('input', function(e) {
 	showHostText.set({
 		text: "w/ " + showHost,
 	})
+	positionText()
 	canvas.renderAll()
 });
 
@@ -243,14 +247,7 @@ document.getElementById("show-date").addEventListener('input', function(e) {
 
 document.getElementById("text-position").addEventListener('input', function(e) {
 	textPosition = e.target.value
-	maxYOffset = CANVASSIZE - (4 * MARGIN) - showNameText.height - showHostText.height
-	yOffset = (+textPosition / 100) * maxYOffset
-	showNameText.set({
-		top: YBASE + yOffset
-	})
-	showHostText.set({
-		top: YBASE + showNameText.height + showNameText.lineHeight + yOffset
-	})
+	positionText()
 	canvas.renderAll()
 });
 
