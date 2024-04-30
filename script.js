@@ -111,6 +111,12 @@ function setImageToBackground(img, imgSizing) {
 	canvas.add(img);
 	canvas.renderAll();
 	img.sendToBack();
+	img.setControlsVisibility({
+		mb: false,
+		ml: false,
+		mr: false,
+		mt: false,
+	})
 }
 
 function resizeCanvasToWindow() {
@@ -139,6 +145,7 @@ let showNameText = new fabric.Textbox(showName, {
 	top: YBASE,
 	originY: "top",
 	evented: false,
+	selectable: false,
 });
 
 let showHostText = new fabric.Textbox("w/ " + showHost, {
@@ -154,6 +161,7 @@ let showHostText = new fabric.Textbox("w/ " + showHost, {
 	top: YBASE + showNameText.height + showNameText.lineHeight,
 	originY: "top",
 	evented: false,
+	selectable: false,
 });
 
 let logo = new fabric.loadSVGFromURL('./assets/logo.svg', function(objects, options) {
@@ -167,6 +175,7 @@ let logo = new fabric.loadSVGFromURL('./assets/logo.svg', function(objects, opti
 	svgData.fill = accentColour;
 	svgData.stroke = 0;
 	svgData.evented = false;
+	svgData.selectable = false;
 	svgData.opacity = +accentOpacity / 100;
 	svgData.visible = logoBool;
 	canvas.add(svgData);
@@ -182,6 +191,7 @@ let background = new fabric.Rect({
 	fill: backgroundColour,
 	opacity: +backgroundOpacity / 100,
 	evented: false,
+	selectable: false,
 });
 canvas.add(background);
 
@@ -194,6 +204,7 @@ let link = new fabric.loadSVGFromURL('./assets/link.svg', function(objects, opti
 	svgData.originY = "bottom";
 	svgData.stroke = 0;
 	svgData.evented = false;
+	svgData.selectable = false;
 	svgData.opacity = +accentOpacity / 100;
 	svgData.visible = linkBool;
 	for (let i = 0; i < objects.length; i++) {
@@ -215,6 +226,7 @@ let counterDays = new fabric.IText(chuntDays.toString(), {
 	originX: "right",
 	originY: "bottom",
 	evented: false,
+	selectable: false,
 })
 canvas.add(counterDays)
 
@@ -228,6 +240,7 @@ let counterStart = new fabric.loadSVGFromURL('./assets/counter-start.svg', funct
 	svgData.scaleToHeight(47);
 	svgData.stroke = 0;
 	svgData.evented = false;
+	svgData.selectable = false;
 	svgData.opacity = +accentOpacity / 100;
 	svgData.visible = counterBool;
 	for (let i = 0; i < objects.length; i++) {
