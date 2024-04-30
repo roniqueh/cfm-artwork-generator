@@ -355,14 +355,20 @@ canvas.setZoom(scaleFactor);
 canvas.setWidth(displaySize);
 canvas.setHeight(displaySize);
 
+const resizeCanvasToWindow = () => {
+  let canvasContainer = document.querySelector(".canvas-container");
+  canvasContainer.style.width = "100%";
+  canvasContainer.style.height = "100%";
+  displaySize = canvasContainer.clientWidth
+  scaleFactor = displaySize / CANVASSIZE;
+  canvas.setZoom(scaleFactor);
+  canvas.setWidth(displaySize);
+  canvas.setHeight(displaySize);
+};
+
+resizeCanvasToWindow();
+
 window.addEventListener('resize', function() {
-	let canvasContainer = document.querySelector(".canvas-container");
-	canvasContainer.style.width = "100%";
-	canvasContainer.style.height = "100%";
-	displaySize = canvasContainer.clientWidth
-	scaleFactor = displaySize / CANVASSIZE;
-	canvas.setZoom(scaleFactor);
-	canvas.setWidth(displaySize);
-	canvas.setHeight(displaySize);
+  resizeCanvasToWindow();
 });
 
