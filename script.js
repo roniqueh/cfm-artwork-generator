@@ -105,6 +105,17 @@ function setImageToBackground(img, imgSizing) {
 	});
 }
 
+function resizeCanvasToWindow() {
+	let canvasContainer = document.querySelector(".canvas-container");
+	canvasContainer.style.width = "100%";
+	canvasContainer.style.height = "100%";
+	displaySize = canvasContainer.clientWidth
+	scaleFactor = displaySize / CANVASSIZE;
+	canvas.setZoom(scaleFactor);
+	canvas.setWidth(displaySize);
+	canvas.setHeight(displaySize);
+};
+
 // Defining fabric objects
 let showNameText = new fabric.Textbox(showName, {
 	fontSize: 68,
@@ -350,25 +361,16 @@ document.getElementById("save-artwork").addEventListener('click', function() {
 	document.body.removeChild(a)
 })
 
+window.addEventListener('resize', function() {
+	resizeCanvasToWindow();
+});
+
 // Resizing canvas to fit screen
 canvas.setZoom(scaleFactor);
 canvas.setWidth(displaySize);
 canvas.setHeight(displaySize);
 
-const resizeCanvasToWindow = () => {
-  let canvasContainer = document.querySelector(".canvas-container");
-  canvasContainer.style.width = "100%";
-  canvasContainer.style.height = "100%";
-  displaySize = canvasContainer.clientWidth
-  scaleFactor = displaySize / CANVASSIZE;
-  canvas.setZoom(scaleFactor);
-  canvas.setWidth(displaySize);
-  canvas.setHeight(displaySize);
-};
 
 resizeCanvasToWindow();
 
-window.addEventListener('resize', function() {
-  resizeCanvasToWindow();
-});
 
