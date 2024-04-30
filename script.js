@@ -16,7 +16,7 @@ html5Canvas.style.height = "100%";
 let displaySize = html5Canvas.clientWidth;
 let scaleFactor = displaySize / CANVASSIZE;
 
-const canvas = new fabric.Canvas('canvas');
+const canvas = new fabric.Canvas('canvas', { preserveObjectStacking: true });
 canvas.hoverCursor = 'pointer';
 
 // Initialise variables
@@ -84,6 +84,10 @@ function setSVGVisibility(id, visibility) {
 }
 
 function setImageToBackground(img, imgSizing) {
+	if (getObjectById("background-image")) {
+		canvas.remove(getObjectById("background-image"))
+		canvas.renderAll()
+	}
 	let scaleRatio;
 	switch (imgSizing) {
 		case 'img-cover':
@@ -94,7 +98,8 @@ function setImageToBackground(img, imgSizing) {
 			break
 	}
 
-	canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+	img.set({
+		id: "background-image",
 		scaleX: scaleRatio,
 		scaleY: scaleRatio,
 		left: CANVASSIZE / 2,
@@ -102,7 +107,10 @@ function setImageToBackground(img, imgSizing) {
 		originX: 'middle',
 		originY: 'middle',
 		selectable: true,
-	});
+	})
+	canvas.add(img);
+	canvas.renderAll();
+	img.sendToBack();
 }
 
 function resizeCanvasToWindow() {
@@ -130,7 +138,7 @@ let showNameText = new fabric.Textbox(showName, {
 	left: MARGIN,
 	top: YBASE,
 	originY: "top",
-	selectable: false,
+	evented: false,
 });
 
 let showHostText = new fabric.Textbox("w/ " + showHost, {
@@ -145,7 +153,7 @@ let showHostText = new fabric.Textbox("w/ " + showHost, {
 	left: MARGIN,
 	top: YBASE + showNameText.height + showNameText.lineHeight,
 	originY: "top",
-	selectable: false,
+	evented: false,
 });
 
 let logo = new fabric.loadSVGFromURL('./assets/logo.svg', function(objects, options) {
@@ -158,7 +166,7 @@ let logo = new fabric.loadSVGFromURL('./assets/logo.svg', function(objects, opti
 	svgData.scaleToHeight(53);
 	svgData.fill = accentColour;
 	svgData.stroke = 0;
-	svgData.selectable = false;
+	svgData.evented = false;
 	svgData.opacity = +accentOpacity / 100;
 	svgData.visible = logoBool;
 	canvas.add(svgData);
@@ -173,7 +181,7 @@ let background = new fabric.Rect({
 	left: -100,
 	fill: backgroundColour,
 	opacity: +backgroundOpacity / 100,
-	selectable: false,
+	evented: false,
 });
 canvas.add(background);
 
@@ -185,7 +193,7 @@ let link = new fabric.loadSVGFromURL('./assets/link.svg', function(objects, opti
 	svgData.originX = "right";
 	svgData.originY = "bottom";
 	svgData.stroke = 0;
-	svgData.selectable = false;
+	svgData.evented = false;
 	svgData.opacity = +accentOpacity / 100;
 	svgData.visible = linkBool;
 	for (let i = 0; i < objects.length; i++) {
@@ -206,7 +214,7 @@ let counterDays = new fabric.IText(chuntDays.toString(), {
 	top: CANVASSIZE - MARGIN,
 	originX: "right",
 	originY: "bottom",
-	selectable: false,
+	evented: false,
 })
 canvas.add(counterDays)
 
@@ -219,7 +227,7 @@ let counterStart = new fabric.loadSVGFromURL('./assets/counter-start.svg', funct
 	svgData.originY = "bottom";
 	svgData.scaleToHeight(47);
 	svgData.stroke = 0;
-	svgData.selectable = false;
+	svgData.evented = false;
 	svgData.opacity = +accentOpacity / 100;
 	svgData.visible = counterBool;
 	for (let i = 0; i < objects.length; i++) {
