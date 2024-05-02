@@ -378,6 +378,12 @@ document.fonts.ready.then(() => {
 		})
 	});
 
+	document.getElementById("background-colour").addEventListener('input', function(e) {
+		backgroundColour = e.target.value
+		canvas.setBackgroundColor(backgroundColour)
+		canvas.renderAll()
+	})
+
 	document.getElementById("accent-colour").addEventListener('input', function(e) {
 		accentColour = e.target.value
 		showNameText.set({ fill: accentColour })
