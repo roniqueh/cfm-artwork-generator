@@ -30,8 +30,20 @@
 			<input type="range" name="text-position" id="text-position" min="0" max="100" value="0">
 			<div class="colour-options">
 				<div class="colour-wrapper">
+					<!-- <div class="flex-centered-col"> -->
+					<label for="background-colour">BG</label>
+					<input type="color" name="background-colour" id="background-colour"
+						value="#ffffff">
+					<!-- </div> -->
+					<!-- <div class="flex-centered-col"> -->
+					<!-- 	<label for="background-opacity">Opacity</label> -->
+					<!-- 	<input type="range" name="background-opacity" id="background-opacity" -->
+					<!-- 		min="0" max="100" value="100"> -->
+					<!-- </div> -->
+				</div>
+				<div class="colour-wrapper">
 					<div class="flex-centered-col">
-						<label for="accent-colour">Accent</label>
+						<label for="accent-colour">Text</label>
 						<input type="color" name="accent-colour" id="accent-colour"
 							value="#000000">
 					</div>
@@ -43,14 +55,14 @@
 				</div>
 				<div class="colour-wrapper">
 					<div class="flex-centered-col">
-						<label for="background-colour">BG</label>
-						<input type="color" name="background-colour" id="background-colour"
+						<label for="overlay-colour">Overlay</label>
+						<input type="color" name="overlay-colour" id="overlay-colour"
 							value="#ffffff">
 					</div>
 					<div class="flex-centered-col">
-						<label for="background-opacity">Opacity</label>
-						<input type="range" name="background-opacity" id="background-opacity"
-							min="0" max="100" value="100">
+						<label for="overlay-opacity">Opacity</label>
+						<input type="range" name="overlay-opacity" id="overlay-opacity" min="0"
+							max="100" value="0">
 					</div>
 				</div>
 			</div>

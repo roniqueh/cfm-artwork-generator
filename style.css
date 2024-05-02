@@ -224,6 +224,11 @@ input[type="range"] {
 	flex: 1;
 }
 
+#background-colour {
+	height: 50%;
+	margin-block: auto;
+}
+
 .flex-centered-col {
 	display: flex;
 	flex-direction: column;
