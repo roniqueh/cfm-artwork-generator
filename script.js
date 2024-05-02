@@ -22,184 +22,185 @@ const canvas = new fabric.Canvas('canvas', {
 });
 canvas.hoverCursor = 'pointer';
 
-// Initialise variables
-let showName = document.getElementById("show-name").value;
-let showHost = document.getElementById("show-host").value;
-let showDate = new Date(document.getElementById("show-date").value || Date());
-let textPosition = document.getElementById("text-position").value = 0;
-// Following two require the fabric.Textbox of showName and showHost to be created first => set textPosition to 0 above
-let maxYOffset;
-let yOffset;
-let chuntDays = Math.floor((showDate - CHUNT0DATE) / (1000 * 3600 * 24));
-let showImg = new Image();
-let imgSizing = document.querySelector("[name='img-sizing']:checked").id;
-let accentColour = document.getElementById("accent-colour").value;
-let accentOpacity = document.getElementById("accent-opacity").value;
-let backgroundColour = document.getElementById("background-colour").value;
-let overlayColour = document.getElementById("overlay-colour").value;
-let overlayOpacity = document.getElementById("overlay-opacity").value;
-let textBool = document.getElementById("ge1")['checked'];
-let logoBool = document.getElementById("ge2")['checked'];
-let counterBool = document.getElementById("ge3")['checked'];
-let linkBool = document.getElementById("ge4")['checked'];
-
-canvas.setBackgroundColor(backgroundColour);
-
-// Helper functions
-function getObjectById(id) {
-	for (let i = 0; i < canvas.getObjects().length; i++) {
-		let object = canvas.getObjects()[i]
-		if (object.id === id) {
-			return object
-		}
-	}
-}
-
-function positionText() {
-	maxYOffset = CANVASSIZE - (4 * MARGIN) - showNameText.height - showHostText.height
-	yOffset = (+textPosition / 100) * maxYOffset
-	showNameText.set({
-		top: YBASE + yOffset
-	})
-	showHostText.set({
-		top: YBASE + yOffset + showNameText.height - 6
-	})
-}
-
-function setSVGColour(id, color) {
-	let SVGObject = getObjectById(id);
-	if (typeof SVGObject._objects !== "undefined") {
-		SVGObject.set({ fill: color })
-		for (let j = 0; j < SVGObject._objects.length; j++) {
-			let SVGObjectPath = SVGObject._objects[j]
-			SVGObjectPath.set({ fill: color })
-		}
-	} else {
-		SVGObject.set({ fill: color })
-	}
-}
-
-function setSVGOpacity(id, opacity) {
-	let SVGObject = getObjectById(id);
-	SVGObject.set({ opacity: opacity })
-}
-
-function setSVGVisibility(id, visibility) {
-	let SVGObject = getObjectById(id);
-	SVGObject.set({ visible: visibility })
-}
-
-function setImageToBackground(img, imgSizing) {
-	if (getObjectById("background-image")) {
-		canvas.remove(getObjectById("background-image"))
-		canvas.renderAll()
-	}
-	let scaleRatio;
-	let heightRatio = CANVASSIZE / img.height;
-	let widthRatio = CANVASSIZE / img.width;
-	switch (imgSizing) {
-		case 'img-cover':
-			// Scale fixed to scaleRatio + translation allowed only in direction of remaining image
-			scaleRatio = Math.max(widthRatio, heightRatio);
-			img.set({
-				minScaleLimit: scaleRatio,
-
-			})
-			if (widthRatio > heightRatio) {
-				// Width is limiting factor
-				img.set({ lockMovementX: true })
-			} else {
-				// Height is limiting factor
-				img.set({ lockMovementY: true })
-			}
-			img.set({ hasControls: false })
-			// Top and left of image reference position of center of image wrt canvas
-			// TODO: Use img.top, img.left to prevent edge of image coming on to canvas
-			// 
-			img.on('moving', function() {
-				let actualWidth = img.width * img.scaleX
-				let actualHeight = img.height * img.scaleY
-
-				// Restrict movement to the left
-				if (img.left + (actualWidth / 2) < CANVASSIZE) {
-					this.set('left', CANVASSIZE - (actualWidth / 2));
-				}
-
-				// Restrict movement to the top
-				if (img.top + (actualHeight / 2) < CANVASSIZE) {
-					this.set('top', CANVASSIZE - (actualHeight / 2));
-				}
-
-				// Restrict movement to the right
-				if (img.left - (actualWidth / 2) > 0) {
-					this.set('left', actualWidth / 2);
-				}
-
-				// Restrict movement to the bottom
-				if (img.top - (actualHeight / 2) > 0) {
-					this.set('top', actualHeight / 2);
-				}
-				//
-				// // Restrict movement to the right
-				// if (img.width + img.left < canvas.width) {
-				// 	this.set('left', canvas.width - img.width);
-				// }
-				//
-				// // Restrict movement to the bottom
-				// if (img.height + img.top < canvas.height) {
-				// 	this.set('top', canvas.height - img.height);
-				// }
-			});
-			break
-		case 'img-contain':
-			// No translation allowed, image can only be scaled wrt canvas center
-			scaleRatio = Math.min(widthRatio, heightRatio);
-			scaleRatio *= 0.8;
-			img.set({
-				lockMovementX: true,
-				lockMovementY: true,
-				centeredScaling: true,
-			})
-			img.setControlsVisibility({
-				mb: false,
-				ml: false,
-				mr: false,
-				mt: false,
-				mtr: false,
-			})
-			break
-	}
-
-	img.set({
-		id: "background-image",
-		scaleX: scaleRatio,
-		scaleY: scaleRatio,
-		left: CANVASSIZE / 2,
-		top: CANVASSIZE / 2,
-		originX: 'middle',
-		originY: 'middle',
-		selectable: true,
-	})
-
-	canvas.add(img);
-	canvas.renderAll();
-	img.sendToBack();
-
-}
-
-function resizeCanvasToWindow() {
-	let canvasContainer = document.querySelector(".canvas-container");
-	canvasContainer.style.width = "100%";
-	canvasContainer.style.height = "100%";
-	displaySize = canvasContainer.clientWidth
-	scaleFactor = displaySize / CANVASSIZE;
-	canvas.setZoom(scaleFactor);
-	canvas.setWidth(displaySize);
-	canvas.setHeight(displaySize);
-};
-
 // Wait for initial font load
 document.fonts.ready.then(() => {
+	// Initialise variables
+	let showName = document.getElementById("show-name").value;
+	let showHost = document.getElementById("show-host").value;
+	let showDate = new Date(document.getElementById("show-date").value || Date());
+	let textPosition = document.getElementById("text-position").value = 0;
+	// Following two require the fabric.Textbox of showName and showHost to be created first => set textPosition to 0 above
+	let maxYOffset;
+	let yOffset;
+	let chuntDays = Math.floor((showDate - CHUNT0DATE) / (1000 * 3600 * 24));
+	let showImg = new Image();
+	let imgSizing = document.querySelector("[name='img-sizing']:checked").id;
+	let accentColour = document.getElementById("accent-colour").value;
+	let accentOpacity = document.getElementById("accent-opacity").value;
+	let backgroundColour = document.getElementById("background-colour").value;
+	let overlayColour = document.getElementById("overlay-colour").value;
+	let overlayOpacity = document.getElementById("overlay-opacity").value;
+	let textBool = document.getElementById("ge1")['checked'];
+	let logoBool = document.getElementById("ge2")['checked'];
+	let counterBool = document.getElementById("ge3")['checked'];
+	let linkBool = document.getElementById("ge4")['checked'];
+
+	canvas.setBackgroundColor(backgroundColour);
+	canvas.renderAll();
+
+	// Helper functions
+	function getObjectById(id) {
+		for (let i = 0; i < canvas.getObjects().length; i++) {
+			let object = canvas.getObjects()[i]
+			if (object.id === id) {
+				return object
+			}
+		}
+	}
+
+	function positionText() {
+		maxYOffset = CANVASSIZE - (4 * MARGIN) - showNameText.height - showHostText.height
+		yOffset = (+textPosition / 100) * maxYOffset
+		showNameText.set({
+			top: YBASE + yOffset
+		})
+		showHostText.set({
+			top: YBASE + yOffset + showNameText.height - 6
+		})
+	}
+
+	function setSVGColour(id, color) {
+		let SVGObject = getObjectById(id);
+		if (typeof SVGObject._objects !== "undefined") {
+			SVGObject.set({ fill: color })
+			for (let j = 0; j < SVGObject._objects.length; j++) {
+				let SVGObjectPath = SVGObject._objects[j]
+				SVGObjectPath.set({ fill: color })
+			}
+		} else {
+			SVGObject.set({ fill: color })
+		}
+	}
+
+	function setSVGOpacity(id, opacity) {
+		let SVGObject = getObjectById(id);
+		SVGObject.set({ opacity: opacity })
+	}
+
+	function setSVGVisibility(id, visibility) {
+		let SVGObject = getObjectById(id);
+		SVGObject.set({ visible: visibility })
+	}
+
+	function setImageToBackground(img, imgSizing) {
+		if (getObjectById("background-image")) {
+			canvas.remove(getObjectById("background-image"))
+			canvas.renderAll()
+		}
+		let scaleRatio;
+		let heightRatio = CANVASSIZE / img.height;
+		let widthRatio = CANVASSIZE / img.width;
+		switch (imgSizing) {
+			case 'img-cover':
+				// Scale fixed to scaleRatio + translation allowed only in direction of remaining image
+				scaleRatio = Math.max(widthRatio, heightRatio);
+				img.set({
+					minScaleLimit: scaleRatio,
+
+				})
+				if (widthRatio > heightRatio) {
+					// Width is limiting factor
+					img.set({ lockMovementX: true })
+				} else {
+					// Height is limiting factor
+					img.set({ lockMovementY: true })
+				}
+				img.set({ hasControls: false })
+				// Top and left of image reference position of center of image wrt canvas
+				// TODO: Use img.top, img.left to prevent edge of image coming on to canvas
+				// 
+				img.on('moving', function() {
+					let actualWidth = img.width * img.scaleX
+					let actualHeight = img.height * img.scaleY
+
+					// Restrict movement to the left
+					if (img.left + (actualWidth / 2) < CANVASSIZE) {
+						this.set('left', CANVASSIZE - (actualWidth / 2));
+					}
+
+					// Restrict movement to the top
+					if (img.top + (actualHeight / 2) < CANVASSIZE) {
+						this.set('top', CANVASSIZE - (actualHeight / 2));
+					}
+
+					// Restrict movement to the right
+					if (img.left - (actualWidth / 2) > 0) {
+						this.set('left', actualWidth / 2);
+					}
+
+					// Restrict movement to the bottom
+					if (img.top - (actualHeight / 2) > 0) {
+						this.set('top', actualHeight / 2);
+					}
+					//
+					// // Restrict movement to the right
+					// if (img.width + img.left < canvas.width) {
+					// 	this.set('left', canvas.width - img.width);
+					// }
+					//
+					// // Restrict movement to the bottom
+					// if (img.height + img.top < canvas.height) {
+					// 	this.set('top', canvas.height - img.height);
+					// }
+				});
+				break
+			case 'img-contain':
+				// No translation allowed, image can only be scaled wrt canvas center
+				scaleRatio = Math.min(widthRatio, heightRatio);
+				scaleRatio *= 0.8;
+				img.set({
+					lockMovementX: true,
+					lockMovementY: true,
+					centeredScaling: true,
+				})
+				img.setControlsVisibility({
+					mb: false,
+					ml: false,
+					mr: false,
+					mt: false,
+					mtr: false,
+				})
+				break
+		}
+
+		img.set({
+			id: "background-image",
+			scaleX: scaleRatio,
+			scaleY: scaleRatio,
+			left: CANVASSIZE / 2,
+			top: CANVASSIZE / 2,
+			originX: 'middle',
+			originY: 'middle',
+			selectable: true,
+		})
+
+		canvas.add(img);
+		canvas.renderAll();
+		img.sendToBack();
+
+	}
+
+	function resizeCanvasToWindow() {
+		let canvasContainer = document.querySelector(".canvas-container");
+		canvasContainer.style.width = "100%";
+		canvasContainer.style.height = "100%";
+		displaySize = canvasContainer.clientWidth
+		scaleFactor = displaySize / CANVASSIZE;
+		canvas.setZoom(scaleFactor);
+		canvas.setWidth(displaySize);
+		canvas.setHeight(displaySize);
+	};
+
 	// Initalise Fabric objects
 	let showNameText = new fabric.Textbox(showName, {
 		fontSize: 68,
@@ -376,12 +377,6 @@ document.fonts.ready.then(() => {
 			setImageToBackground(oImg, imgSizing)
 		})
 	});
-
-	document.getElementById("background-colour").addEventListener('input', function(e) {
-		backgroundColour = e.target.value
-		canvas.setBackgroundColor(backgroundColour)
-		canvas.renderAll()
-	})
 
 	document.getElementById("accent-colour").addEventListener('input', function(e) {
 		accentColour = e.target.value
