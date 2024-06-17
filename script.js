@@ -2,7 +2,7 @@ let html5Canvas = document.getElementById("canvas");
 const CANVASSIZE = html5Canvas.width;
 const MARGIN = 40;
 const YBASE = MARGIN;
-const TEXTWIDTH = CANVASSIZE - (2 * MARGIN);
+const TEXTWIDTH = 830;
 const LINEHEIGHT = 0.915;
 const CHARSPACING = -50;
 const LINKWIDTH = 195;
@@ -216,8 +216,51 @@ document.fonts.ready.then(() => {
 		canvas.setHeight(displaySize);
 	};
 
+	// Extend fabric.Textbox to change how background lines are rendered
+	fabric.TextboxWithCustomBackgroundFill = fabric.util.createClass(fabric.Textbox, {
+		type: 'textboxwithcustombackgroundfill',
+
+		toObject: function() {
+			return fabric.util.object.extend(this.callSuper('toObject'), {
+				textBackgroundColor: this.get('textBackgroundColor'),
+			});
+		},
+
+		_renderTextLinesBackground: function(ctx) {
+			var heightOfLine, heightScale = 0.75,
+				lineLeftOffset,
+				line,
+				leftOffset = this._getLeftOffset(),
+				lineTopOffset = this._getTopOffset(),
+				boxStart = 0, boxWidth = 0, charBox, currentColor,
+				drawStart;
+			for (var i = 0, len = this._textLines.length; i < len; i++) {
+				heightOfLine = this.getHeightOfLine(i);
+				line = this._textLines[i];
+				lineLeftOffset = this._getLineLeftOffset(i);
+				boxWidth = 0;
+				boxStart = 0;
+				for (var j = 0, jlen = line.length; j < jlen; j++) {
+					charBox = this.__charBounds[i][j];
+					currentColor = this.getValueOfPropertyAt(i, j, 'textBackgroundColor');
+					boxWidth += charBox.kernedWidth;
+				}
+				drawStart = leftOffset + lineLeftOffset + boxStart;
+				ctx.fillStyle = currentColor;
+				ctx.fillRect(
+					drawStart,
+					lineTopOffset + ((1 - heightScale) * heightOfLine) / 2,
+					boxWidth,
+					(heightOfLine / this.lineHeight) * heightScale
+				);
+
+				lineTopOffset += heightOfLine;
+			}
+		},
+	});
+
 	// Initalise Fabric objects
-	let showNameText = new fabric.Textbox(showName, {
+	let showNameText = new fabric.TextboxWithCustomBackgroundFill(showName, {
 		fontSize: 68,
 		fontFamily: "GT Maru",
 		fontWeight: "bold",
@@ -234,7 +277,7 @@ document.fonts.ready.then(() => {
 		selectable: false,
 	});
 
-	let showHostText = new fabric.Textbox("w/ " + showHost, {
+	let showHostText = new fabric.TextboxWithCustomBackgroundFill("w/ " + showHost, {
 		fontSize: 68,
 		fontFamily: "GT Maru",
 		lineHeight: LINEHEIGHT,
@@ -406,7 +449,6 @@ document.fonts.ready.then(() => {
 	})
 
 	textBackgroundColourPicker.on('show', function() {
-		console.log(textBackgroundColour)
 		if (textBackgroundColour === "rgba(0, 0, 0, 0)") {
 			textBackgroundColour = "white"
 			textBackgroundColourPicker.set(textBackgroundColour)
