@@ -35,7 +35,7 @@ const overlayColourPicker = Spectrum.getInstance('#overlay-colour', {
 	type: "color",
 	showInput: true,
 	showButtons: false,
-	allowEmpty: false,
+	allowEmpty: true,
 	color: "transparent",
 });
 
@@ -390,7 +390,6 @@ document.fonts.ready.then(() => {
 
 	backgroundColourPicker.on('move', function(e) {
 		backgroundColour = e.detail.color.toRgbString()
-		console.log(backgroundColour)
 		canvas.setBackgroundColor(backgroundColour)
 		canvas.renderAll()
 	});
@@ -406,15 +405,38 @@ document.fonts.ready.then(() => {
 		canvas.renderAll()
 	})
 
-	textBackgroundColourPicker.on('move', function(e) {
-		textBackgroundColour = e.detail.color.toRgbString()
+	textBackgroundColourPicker.on('show', function(e) {
+		textBackgroundColour = "white"
+		textBackgroundColourPicker.set(textBackgroundColour)
 		showNameText.set({ textBackgroundColor: textBackgroundColour })
 		showHostText.set({ textBackgroundColor: textBackgroundColour })
 		canvas.renderAll()
 	})
 
+	textBackgroundColourPicker.on('move', function(e) {
+		try {
+			textBackgroundColour = e.detail.color.toRgbString()
+		} catch (err) {
+			textBackgroundColour = "transparent"
+		}
+		showNameText.set({ textBackgroundColor: textBackgroundColour })
+		showHostText.set({ textBackgroundColor: textBackgroundColour })
+		canvas.renderAll()
+	})
+
+	overlayColourPicker.on('show', function(e) {
+		overlayColour = "rgba(0, 0, 0, 0.5)"
+		overlayColourPicker.set(overlayColour)
+		overlay.set({ fill: overlayColour })
+		canvas.renderAll()
+	})
+
 	overlayColourPicker.on('move', function(e) {
-		overlayColour = e.detail.color.toRgbString()
+		try {
+			overlayColour = e.detail.color.toRgbString()
+		} catch (err) {
+			overlayColour = "transparent"
+		}
 		overlay.set({ fill: overlayColour })
 		canvas.renderAll()
 	})
