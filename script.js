@@ -405,12 +405,15 @@ document.fonts.ready.then(() => {
 		canvas.renderAll()
 	})
 
-	textBackgroundColourPicker.on('show', function(e) {
-		textBackgroundColour = "white"
-		textBackgroundColourPicker.set(textBackgroundColour)
-		showNameText.set({ textBackgroundColor: textBackgroundColour })
-		showHostText.set({ textBackgroundColor: textBackgroundColour })
-		canvas.renderAll()
+	textBackgroundColourPicker.on('show', function() {
+		console.log(textBackgroundColour)
+		if (textBackgroundColour === "rgba(0, 0, 0, 0)") {
+			textBackgroundColour = "white"
+			textBackgroundColourPicker.set(textBackgroundColour)
+			showNameText.set({ textBackgroundColor: textBackgroundColour })
+			showHostText.set({ textBackgroundColor: textBackgroundColour })
+			canvas.renderAll()
+		}
 	})
 
 	textBackgroundColourPicker.on('move', function(e) {
@@ -424,11 +427,13 @@ document.fonts.ready.then(() => {
 		canvas.renderAll()
 	})
 
-	overlayColourPicker.on('show', function(e) {
-		overlayColour = "rgba(0, 0, 0, 0.5)"
-		overlayColourPicker.set(overlayColour)
-		overlay.set({ fill: overlayColour })
-		canvas.renderAll()
+	overlayColourPicker.on('show', function() {
+		if (overlayColour === "rgba(0, 0, 0, 0)") {
+			overlayColour = "rgba(0, 0, 0, 0.5)"
+			overlayColourPicker.set(overlayColour)
+			overlay.set({ fill: overlayColour })
+			canvas.renderAll()
+		}
 	})
 
 	overlayColourPicker.on('move', function(e) {
