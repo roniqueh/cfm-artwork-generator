@@ -8,6 +8,37 @@ const CHARSPACING = -50;
 const LINKWIDTH = 195;
 const CHUNT0DATE = new Date("2022-03-14");
 
+// Create colour pickers
+const backgroundColourPicker = Spectrum.getInstance('#background-colour', {
+	type: "color",
+	showInput: true,
+	showButtons: false,
+	allowEmpty: false,
+});
+
+const accentColourPicker = Spectrum.getInstance('#accent-colour', {
+	type: "color",
+	showInput: true,
+	showButtons: false,
+	allowEmpty: false,
+});
+
+const textBackgroundColourPicker = Spectrum.getInstance('#text-background-colour', {
+	type: "color",
+	showInput: true,
+	showButtons: false,
+	allowEmpty: true,
+	color: "transparent",
+});
+
+const overlayColourPicker = Spectrum.getInstance('#overlay-colour', {
+	type: "color",
+	showInput: true,
+	showButtons: false,
+	allowEmpty: false,
+	color: "transparent",
+});
+
 // Resize HTML5 Canvas to fit parent wrapper (size controlled by CSS)
 html5Canvas.style.width = "100%";
 html5Canvas.style.height = "100%";
@@ -33,13 +64,12 @@ document.fonts.ready.then(() => {
 	let maxYOffset;
 	let yOffset;
 	let chuntDays = Math.floor((showDate - CHUNT0DATE) / (1000 * 3600 * 24));
+	let backgroundColour = backgroundColourPicker.get().toRgbString();
+	let accentColour = accentColourPicker.get().toRgbString();
+	let textBackgroundColour = textBackgroundColourPicker.get().toRgbString();
+	let overlayColour = overlayColourPicker.get().toRgbString();
 	let showImg = new Image();
 	let imgSizing = document.querySelector("[name='img-sizing']:checked").id;
-	let accentColour = document.getElementById("accent-colour").value;
-	let accentOpacity = document.getElementById("accent-opacity").value;
-	let backgroundColour = document.getElementById("background-colour").value;
-	let overlayColour = document.getElementById("overlay-colour").value;
-	let overlayOpacity = document.getElementById("overlay-opacity").value;
 	let textBool = document.getElementById("ge1")['checked'];
 	let logoBool = document.getElementById("ge2")['checked'];
 	let counterBool = document.getElementById("ge3")['checked'];
@@ -80,11 +110,6 @@ document.fonts.ready.then(() => {
 		} else {
 			SVGObject.set({ fill: color })
 		}
-	}
-
-	function setSVGOpacity(id, opacity) {
-		let SVGObject = getObjectById(id);
-		SVGObject.set({ opacity: opacity })
 	}
 
 	function setSVGVisibility(id, visibility) {
@@ -142,16 +167,6 @@ document.fonts.ready.then(() => {
 					if (img.top - (actualHeight / 2) > 0) {
 						this.set('top', actualHeight / 2);
 					}
-					//
-					// // Restrict movement to the right
-					// if (img.width + img.left < canvas.width) {
-					// 	this.set('left', canvas.width - img.width);
-					// }
-					//
-					// // Restrict movement to the bottom
-					// if (img.height + img.top < canvas.height) {
-					// 	this.set('top', canvas.height - img.height);
-					// }
 				});
 				break
 			case 'img-contain':
@@ -208,7 +223,7 @@ document.fonts.ready.then(() => {
 		fontWeight: "bold",
 		lineHeight: LINEHEIGHT,
 		fill: accentColour,
-		opacity: +accentOpacity / 100,
+		textBackgroundColor: textBackgroundColour,
 		visible: textBool,
 		charSpacing: CHARSPACING,
 		width: TEXTWIDTH,
@@ -224,7 +239,7 @@ document.fonts.ready.then(() => {
 		fontFamily: "GT Maru",
 		lineHeight: LINEHEIGHT,
 		fill: accentColour,
-		opacity: +accentOpacity / 100,
+		textBackgroundColor: textBackgroundColour,
 		visible: textBool,
 		charSpacing: CHARSPACING,
 		width: TEXTWIDTH,
@@ -247,7 +262,6 @@ document.fonts.ready.then(() => {
 		svgData.stroke = 0;
 		svgData.evented = false;
 		svgData.selectable = false;
-		svgData.opacity = +accentOpacity / 100;
 		svgData.visible = logoBool;
 		canvas.add(svgData);
 	});
@@ -260,7 +274,6 @@ document.fonts.ready.then(() => {
 		top: -100,
 		left: -100,
 		fill: overlayColour,
-		opacity: +overlayOpacity / 100,
 		evented: false,
 		selectable: false,
 	});
@@ -276,7 +289,6 @@ document.fonts.ready.then(() => {
 		svgData.stroke = 0;
 		svgData.evented = false;
 		svgData.selectable = false;
-		svgData.opacity = +accentOpacity / 100;
 		svgData.visible = linkBool;
 		for (let i = 0; i < objects.length; i++) {
 			objects[i].fill = accentColour
@@ -290,7 +302,6 @@ document.fonts.ready.then(() => {
 		fontFamily: "GT Maru",
 		fontWeight: "bold",
 		fill: accentColour,
-		opacity: +accentOpacity / 100,
 		visible: counterBool,
 		left: CANVASSIZE - (2 * MARGIN) - LINKWIDTH,
 		top: CANVASSIZE - MARGIN,
@@ -305,14 +316,13 @@ document.fonts.ready.then(() => {
 		var svgData = fabric.util.groupSVGElements(objects, options);
 		svgData.id = "counterStart";
 		svgData.top = CANVASSIZE - MARGIN - 4.5;
-		svgData.left = CANVASSIZE - (2 * MARGIN) - LINKWIDTH - counterDays.width - 4;
+		svgData.left = CANVASSIZE - (2 * MARGIN) - LINKWIDTH - counterDays.width;
 		svgData.originX = "right";
 		svgData.originY = "bottom";
 		svgData.scaleToHeight(47);
 		svgData.stroke = 0;
 		svgData.evented = false;
 		svgData.selectable = false;
-		svgData.opacity = +accentOpacity / 100;
 		svgData.visible = counterBool;
 		for (let i = 0; i < objects.length; i++) {
 			objects[i].fill = accentColour
@@ -361,8 +371,8 @@ document.fonts.ready.then(() => {
 			fabric.Image.fromURL(showImg.src, function(oImg) {
 				setImageToBackground(oImg, imgSizing)
 			})
-			document.getElementById("overlay-opacity").value = 0
-			overlay.set({ "opacity": 0 })
+			overlayColourPicker.set("transparent")
+			overlay.set({ fill: "transparent" })
 			canvas.renderAll()
 		}
 	});
@@ -378,44 +388,34 @@ document.fonts.ready.then(() => {
 		})
 	});
 
-	document.getElementById("background-colour").addEventListener('input', function(e) {
-		backgroundColour = e.target.value
+	backgroundColourPicker.on('move', function(e) {
+		backgroundColour = e.detail.color.toRgbString()
+		console.log(backgroundColour)
 		canvas.setBackgroundColor(backgroundColour)
 		canvas.renderAll()
-	})
+	});
 
-	document.getElementById("accent-colour").addEventListener('input', function(e) {
-		accentColour = e.target.value
+	accentColourPicker.on('move', function(e) {
+		accentColour = e.detail.color.toRgbString()
 		showNameText.set({ fill: accentColour })
 		showHostText.set({ fill: accentColour })
 		counterDays.set({ fill: accentColour })
 		setSVGColour("logo", accentColour)
 		setSVGColour("link", accentColour)
 		setSVGColour("counterStart", accentColour)
-		console.log(canvas.getObjects())
 		canvas.renderAll()
 	})
 
-	document.getElementById("accent-opacity").addEventListener('input', function(e) {
-		accentOpacity = e.target.value
-		showNameText.set({ opacity: +accentOpacity / 100 })
-		showHostText.set({ opacity: +accentOpacity / 100 })
-		counterDays.set({ opacity: +accentOpacity / 100 })
-		setSVGOpacity("link", +accentOpacity / 100)
-		setSVGOpacity("logo", +accentOpacity / 100)
-		setSVGOpacity("counterStart", +accentOpacity / 100)
+	textBackgroundColourPicker.on('move', function(e) {
+		textBackgroundColour = e.detail.color.toRgbString()
+		showNameText.set({ textBackgroundColor: textBackgroundColour })
+		showHostText.set({ textBackgroundColor: textBackgroundColour })
 		canvas.renderAll()
 	})
 
-	document.getElementById("overlay-colour").addEventListener('input', function(e) {
-		overlayColour = e.target.value
+	overlayColourPicker.on('move', function(e) {
+		overlayColour = e.detail.color.toRgbString()
 		overlay.set({ fill: overlayColour })
-		canvas.renderAll()
-	})
-
-	document.getElementById("overlay-opacity").addEventListener('input', function(e) {
-		overlayOpacity = e.target.value
-		overlay.set({ opacity: +overlayOpacity / 100 })
 		canvas.renderAll()
 	})
 

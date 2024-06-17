@@ -132,6 +132,10 @@ button,
 	cursor: pointer;
 }
 
+label {
+	margin-bottom: 4px;
+}
+
 .main-wrapper {
 	--small-artwork-width: 80vw;
 	--max-artwork-width: 600px;
@@ -211,11 +215,18 @@ input[type="range"] {
 	gap: 8px;
 }
 
-.colour-wrapper {
+.image-options {
+	display: flex;
+	justify-content: space-evenly;
+	gap: 8px;
+	align-items: center;
+}
+
+.colour-option-wrapper {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: space-evenly;
 	gap: 8px;
 	border: 2px solid black;
 	/* border-radius: 4px; */
@@ -224,9 +235,10 @@ input[type="range"] {
 	flex: 1;
 }
 
-#background-colour {
-	height: 50%;
-	margin-block: auto;
+.image-option-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .flex-centered-col {

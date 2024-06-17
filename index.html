@@ -29,41 +29,42 @@
 			<label for="text-position">Text Position</label>
 			<input type="range" name="text-position" id="text-position" min="0" max="100" value="0">
 			<div class="colour-options">
-				<div class="colour-wrapper">
-					<label for="background-colour">BG</label>
-					<input type="color" name="background-colour" id="background-colour" value="#ffffff">
+				<div class="colour-option-wrapper">
+					<div class="flex-centered-col">
+						<label for="background-colour">BG</label>
+						<input type="color" name="background-colour" id="background-colour" value="#ffffff">
+					</div>
 				</div>
-				<div class="colour-wrapper">
+				<div class="colour-option-wrapper">
 					<div class="flex-centered-col">
 						<label for="accent-colour">Text</label>
 						<input type="color" name="accent-colour" id="accent-colour" value="#000000">
 					</div>
-					<div class="flex-centered-col">
-						<label for="accent-opacity">Opacity</label>
-						<input type="range" name="accent-opacity" id="accent-opacity" min="0" max="100" value="100">
-					</div>
 				</div>
-				<div class="colour-wrapper">
+				<div class="colour-option-wrapper">
 					<div class="flex-centered-col">
-						<label for="overlay-colour">Overlay</label>
-						<input type="color" name="overlay-colour" id="overlay-colour" value="#ffffff">
-					</div>
-					<div class="flex-centered-col">
-						<label for="overlay-opacity">Opacity</label>
-						<input type="range" name="overlay-opacity" id="overlay-opacity" min="0" max="100" value="0">
+						<label for="text-background-colour">Text BG</label>
+						<input type="color" name="text-background-colour" id="text-background-colour"
+							value="transparent">
 					</div>
 				</div>
 			</div>
-			<label for="show-img">Upload Show Image</label>
+			<label for="show-img">Show Image (optional)</label>
 			<input type="file" name="show-img" id="show-img" accept="image/png, image/jpeg">
 			<div class="main-footer">
-				<div class="flex-centered-col">
-					<p>Image Sizing</p>
-					<div>
-						<input type="radio" name="img-sizing" id="img-cover" checked>
-						<label for="img-cover">Cover</label>
-						<input type="radio" name="img-sizing" id="img-contain">
-						<label for="img-contain">Contain</label>
+				<div class="image-options">
+					<div class="image-option-wrapper">
+						<p>Image Sizing</p>
+						<div>
+							<input type="radio" name="img-sizing" id="img-cover" checked>
+							<label for="img-cover">Cover</label>
+							<input type="radio" name="img-sizing" id="img-contain">
+							<label for="img-contain">Contain</label>
+						</div>
+					</div>
+					<div class="image-option-wrapper">
+						<label for="overlay-colour">Overlay</label>
+						<input type="color" name="overlay-colour" id="overlay-colour" value="transparent">
 					</div>
 				</div>
 				<div class="flex-centered-col">
@@ -83,6 +84,8 @@
 			</button>
 		</div>
 	</div>
+	<script src="https://unpkg.com/spectrum-vanilla/dist/spectrum.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://unpkg.com/spectrum-vanilla/dist/spectrum.min.css">
 	<script src="https://unpkg.com/fabric@5.3.0/dist/fabric.min.js"></script>
 	<script src="./script.js"></script>
 </body>
