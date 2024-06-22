@@ -200,9 +200,9 @@ textarea,
 	align-self: center;
 }
 
-.controls-wrapper>input {
+.controls-wrapper>input,
+textarea {
 	border: 2px solid black;
-	/* border-radius: 4px; */
 }
 
 input[type="range"] {
