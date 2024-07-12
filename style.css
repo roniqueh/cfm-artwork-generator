@@ -119,13 +119,8 @@ textarea:not([rows]) {
 	background-color: transparent;
 }
 
-:not(input, textarea) {
-	cursor: default;
-}
-
 input[type="range"],
 input[type="radio"],
-input[type="color"],
 label[for*="img"],
 button,
 .graphical-elements-wrapper>label {
@@ -143,9 +138,12 @@ label {
 	--controls-width: 400px;
 	--spacing: 32px;
 
-	display: flex;
+	display: grid;
+	grid-template-areas: ". tw"
+		"aw cw"
+		". sw";
+	grid-template-columns: var(--size) var(--controls-width);
 	justify-content: center;
-	flex-wrap: wrap;
 	gap: var(--spacing);
 	margin: var(--spacing);
 }
@@ -154,18 +152,49 @@ label {
 .controls-wrapper,
 .save-wrapper {
 	border: 4px solid black;
-	/* border-radius: 8px; */
 }
 
 .artwork-wrapper {
-	flex-basis: var(--size);
+	grid-area: aw;
 	aspect-ratio: 1;
 	display: flex;
 }
 
+.tablist-wrapper {
+	grid-area: tw;
+	margin-bottom: calc(-1 * var(--spacing));
+	display: grid;
+	gap: 8px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tablist-wrapper>* {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	text-decoration: none;
+	border-inline: 4px solid black;
+	border-top: 4px solid black;
+	font-weight: bold;
+	font-size: 0.9rem;
+}
+
+.tablist-wrapper>:visited {
+	color: inherit;
+}
+
+.tablist-wrapper>.active {
+	background: black;
+	color: white;
+}
+
+.tablist-wrapper>:not(.active):hover {
+	background: lightgray;
+}
 
 .controls-wrapper {
-	flex-basis: var(--controls-width);
+	grid-area: cw;
 	display: flex;
 	flex-direction: column;
 	padding: 16px;
@@ -180,6 +209,16 @@ textarea,
 
 /* max-width = --max-artwork-width + --controls-width + (--spacing * 3) */
 @media (max-width: 1096px) {
+	.main-wrapper {
+		grid-template-areas:
+			"aw"
+			"tw"
+			"cw"
+			"sw";
+
+		grid-template-columns: var(--size);
+	}
+
 	.controls-wrapper {
 		flex-basis: var(--size);
 	}
@@ -203,6 +242,11 @@ textarea,
 .controls-wrapper>input,
 textarea {
 	border: 2px solid black;
+}
+
+input[type="date"],
+input[type="time"] {
+	padding-left: 8px;
 }
 
 input[type="range"] {
@@ -230,7 +274,6 @@ input[type="range"] {
 	justify-content: space-evenly;
 	gap: 8px;
 	border: 2px solid black;
-	/* border-radius: 4px; */
 	padding: 8px;
 	flex-wrap: wrap;
 	flex: 1;
@@ -294,12 +337,13 @@ input {
 }
 
 .save-wrapper {
-	flex-basis: var(--size);
+	grid-area: sw;
 	align-self: center;
 	height: 48px;
 	display: flex;
 	align-items: stretch;
 	justify-content: stretch;
+	margin-top: calc(-0.6 * var(--spacing));
 }
 
 .save-wrapper>* {

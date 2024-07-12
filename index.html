@@ -15,6 +15,11 @@
 		<div class="artwork-wrapper" id="artwork-wrapper">
 			<canvas id="canvas" width=1080 height=1080></canvas>
 		</div>
+		<div class="tablist-wrapper">
+			<a href="#mixcloud" id="mixcloud" onclick="openMixcloudTab(event)">MIXCLOUD</a>
+			<a href="#story" id="story" onclick="openStoryTab(event)">STORY</a>
+			<a href="#tracklist" id="tracklist" onclick="openTracklistTab(event)">TRACKLIST</a>
+		</div>
 		<div class="controls-wrapper">
 			<div class="main-header">
 				<img src="./assets/logo.svg" alt="ChuntFM Logo" height="64px">
@@ -24,24 +29,28 @@
 			<textarea name="show-name" id="show-name" rows="2"></textarea>
 			<label for="show-host">Host</label>
 			<textarea name="show-host" id="show-host" rows="2"></textarea>
-			<label for="show-date">Show Date</label>
-			<input type="date" name="show-date" id="show-date" min="2022-03-14">
-			<label for="text-position">Text Position</label>
-			<input type="range" name="text-position" id="text-position" min="0" max="100" value="0">
+			<label for="tracklist" class="tracklist">Tracklist</label>
+			<textarea name="tracklist" id="tracklist" class="tracklist" rows="12"></textarea>
+			<label for="show-date" class="mixcloud story">Show Date</label>
+			<input type="date" name="show-date" id="show-date" min="2022-03-14" class="mixcloud story">
+			<label for="show-time" class="story">Show Time</label>
+			<input type="time" name="show-time" id="show-time" class="story">
+			<label for="text-position" class="mixcloud">Text Position</label>
+			<input type="range" name="text-position" id="text-position" min="0" max="100" value="0" class="mixcloud">
 			<div class="colour-options">
-				<div class="colour-option-wrapper">
+				<div class="colour-option-wrapper mixcloud story tracklist">
 					<div class="flex-centered-col">
 						<label for="background-colour">BG</label>
 						<input type="color" name="background-colour" id="background-colour" value="#ffffff">
 					</div>
 				</div>
-				<div class="colour-option-wrapper">
+				<div class="colour-option-wrapper mixcloud story tracklist">
 					<div class="flex-centered-col">
 						<label for="accent-colour">Text</label>
 						<input type="color" name="accent-colour" id="accent-colour" value="#000000">
 					</div>
 				</div>
-				<div class="colour-option-wrapper">
+				<div class="colour-option-wrapper mixcloud">
 					<div class="flex-centered-col">
 						<label for="text-background-colour">Text BG</label>
 						<input type="color" name="text-background-colour" id="text-background-colour"
@@ -49,10 +58,10 @@
 					</div>
 				</div>
 			</div>
-			<label for="show-img">Show Image (optional)</label>
-			<input type="file" name="show-img" id="show-img" accept="image/png, image/jpeg">
+			<label for="show-img" class="mixcloud story">Show Image (optional)</label>
+			<input type="file" name="show-img" id="show-img" accept="image/png, image/jpeg" class="mixcloud story">
 			<div class="main-footer">
-				<div class="image-options">
+				<div class="image-options mixcloud">
 					<div class="image-option-wrapper">
 						<p>Image Sizing</p>
 						<div>
@@ -67,7 +76,7 @@
 						<input type="color" name="overlay-colour" id="overlay-colour" value="transparent">
 					</div>
 				</div>
-				<div class="flex-centered-col">
+				<div class="flex-centered-col mixcloud tracklist">
 					<p>Graphical Elements</p>
 					<div class="graphical-elements-wrapper">
 						<label for="ge1"><input type="checkbox" name="ge1" id="ge1" checked>1</label>

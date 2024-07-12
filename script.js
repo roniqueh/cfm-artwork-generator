@@ -542,3 +542,82 @@ document.fonts.ready.then(() => {
 
 
 })
+
+// Helper functions for non-Canvas elements (tablist)
+function changeTab(tabname) {
+	let tabs = document.querySelector(".tablist-wrapper").children
+	for (let i = 0; i < tabs.length; i++) {
+		tabs[i].classList.remove("active")
+	}
+	document.querySelector('#' + tabname).classList.add("active")
+}
+
+function openMixcloudTab() {
+	changeTab("mixcloud")
+	const controlElemChildren = document.querySelector(".controls-wrapper").querySelectorAll("*")
+	for (let i = 0; i < controlElemChildren.length; i++) {
+		let controlElemChild = controlElemChildren[i]
+		if (
+			(controlElemChild.classList.contains('story') || controlElemChild.classList.contains('tracklist'))
+			& !controlElemChild.classList.contains('mixcloud')) {
+			controlElemChild.classList.add('hidden')
+		}
+		if (controlElemChild.classList.contains('mixcloud')) {
+			controlElemChild.classList.remove('hidden')
+		}
+	}
+}
+
+function openStoryTab() {
+	changeTab("story")
+	const controlElemChildren = document.querySelector(".controls-wrapper").querySelectorAll("*")
+	for (let i = 0; i < controlElemChildren.length; i++) {
+		let controlElemChild = controlElemChildren[i]
+		if (
+			(controlElemChild.classList.contains('mixcloud') || controlElemChild.classList.contains('tracklist'))
+			& !controlElemChild.classList.contains('story')) {
+			controlElemChild.classList.add('hidden')
+		}
+		if (controlElemChild.classList.contains('story')) {
+			controlElemChild.classList.remove('hidden')
+		}
+	}
+}
+
+function openTracklistTab() {
+	changeTab("tracklist")
+	const controlElemChildren = document.querySelector(".controls-wrapper").querySelectorAll("*")
+	for (let i = 0; i < controlElemChildren.length; i++) {
+		let controlElemChild = controlElemChildren[i]
+		if (
+			(controlElemChild.classList.contains('mixcloud') || controlElemChild.classList.contains('story'))
+			& !controlElemChild.classList.contains('tracklist')) {
+			controlElemChild.classList.add('hidden')
+		}
+		if (controlElemChild.classList.contains('tracklist')) {
+			controlElemChild.classList.remove('hidden')
+		}
+	}
+}
+
+// Handle user navigating to URL fragment
+window.addEventListener("hashchange", handleHashChange());
+
+function handleHashChange() {
+	const fragment = window.location.hash.slice(1);
+	switch (fragment) {
+		case "mixcloud":
+			openMixcloudTab()
+			break
+		case "story":
+			openStoryTab()
+			break
+		case "tracklist":
+			openTracklistTab()
+			break
+		default:
+			openMixcloudTab()
+			break
+	}
+}
+
