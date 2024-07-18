@@ -84,7 +84,7 @@ document.fonts.ready.then(() => {
 			let object = canvas.getObjects()[i]
 			if (object.id === id) {
 				return object
-			}
+			} else return null
 		}
 	}
 

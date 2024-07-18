@@ -123,7 +123,7 @@ input[type="range"],
 input[type="radio"],
 label[for*="img"],
 button,
-.graphical-elements-wrapper>label {
+.graphical-elements>label {
 	cursor: pointer;
 }
 
@@ -267,7 +267,7 @@ input[type="range"] {
 	align-items: center;
 }
 
-.colour-option-wrapper {
+.colour-option {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -279,7 +279,7 @@ input[type="range"] {
 	flex: 1;
 }
 
-.image-option-wrapper {
+.image-option {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -292,20 +292,20 @@ input[type="range"] {
 	justify-content: space-evenly;
 }
 
-.graphical-elements-wrapper {
+.graphical-elements {
 	display: flex;
 	justify-content: space-between;
 }
 
-.graphical-elements-wrapper>* {
+.graphical-elements>* {
 	margin-inline: 8px;
 }
 
-.graphical-elements-wrapper input[type="checkbox"] {
+.graphical-elements input[type="checkbox"] {
 	display: none;
 }
 
-.graphical-elements-wrapper label {
+.graphical-elements label {
 	width: 40px;
 	border: 2px solid black;
 	text-align: center;
