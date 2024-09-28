@@ -33,8 +33,10 @@
 			<textarea name="tracklist" id="tracklist" class="tracklist" rows="12"></textarea>
 			<label for="show-date" class="mixcloud story">Show Date</label>
 			<input type="date" name="show-date" id="show-date" min="2022-03-14" class="mixcloud story">
-			<label for="show-time" class="story">Show Time</label>
-			<input type="time" name="show-time" id="show-time" class="story">
+			<label for="show-start" class="story">Show Start</label>
+			<input type="time" name="show-start" id="show-start" class="story">
+			<label for="show-end" class="story">Show End</label>
+			<input type="time" name="show-end" id="show-end" class="story">
 			<label for="text-position" class="mixcloud">Text Position</label>
 			<input type="range" name="text-position" id="text-position" min="0" max="100" value="0" class="mixcloud">
 			<div class="colour-options">
@@ -86,10 +88,11 @@
 					</div>
 				</div>
 				<div class="flex-centered-col story">
-					<p>Tagline</p>
 					<div>
 						<input type="radio" name="tagline" id="tagline-1" checked>
 						<label for="tagline-1">If you're listening tune in</label>
+					</div>
+					<div>
 						<input type="radio" name="tagline" id="tagline-2">
 						<label for="tagline-2">Listen live at</label>
 					</div>

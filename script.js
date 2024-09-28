@@ -55,6 +55,10 @@ canvas.hoverCursor = 'pointer';
 
 // Wait for initial font load
 document.fonts.ready.then(() => {
+	drawCanvas()
+})
+
+function drawCanvas() {
 	// Initialise variables
 	let showName = document.getElementById("show-name").value;
 	let showHost = document.getElementById("show-host").value;
@@ -142,8 +146,7 @@ document.fonts.ready.then(() => {
 				}
 				img.set({ hasControls: false })
 				// Top and left of image reference position of center of image wrt canvas
-				// TODO: Use img.top, img.left to prevent edge of image coming on to canvas
-				// 
+
 				img.on('moving', function() {
 					let actualWidth = img.width * img.scaleX
 					let actualHeight = img.height * img.scaleY
@@ -539,9 +542,7 @@ document.fonts.ready.then(() => {
 
 
 	resizeCanvasToWindow();
-
-
-})
+}
 
 // Helper functions for non-Canvas elements (tablist)
 function changeTab(tabname) {

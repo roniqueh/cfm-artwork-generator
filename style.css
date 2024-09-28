@@ -123,7 +123,8 @@ input[type="range"],
 input[type="radio"],
 label[for*="img"],
 button,
-.graphical-elements>label {
+.graphical-elements>label,
+.main-footer label {
 	cursor: pointer;
 }
 
