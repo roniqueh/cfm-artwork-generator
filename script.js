@@ -67,7 +67,7 @@ function switchTab(selectedTab) {
 }
 
 function initaliseVariables() {
-	data = new Object
+	const data = new Object
 	data.showName = document.getElementById("show-name").value;
 	data.showHost = document.getElementById("show-host").value;
 	data.tracklist = document.getElementById("tracklist").value;
@@ -90,15 +90,23 @@ function initaliseVariables() {
 	return data
 }
 
-function drawCanvas(selectedTab) {
+function setupCanvas(data, selectedTab) {
+	switch (selectedTab) {
+		case "mixcloud":
+
+			break;
+
+		default:
+			break;
+	}
+
 }
 
 function updatePage() {
 	const fragment = window.location.hash.slice(1) || "mixcloud"; // sets default tab to MixCloud tab
 	switchTab(fragment)
-	// initialise data
-	// set up correct canvas
-	//
+	let data = initialiseVariables()
+	setupCanvas(data, fragment)
 }
 
 
@@ -106,4 +114,6 @@ updatePage()
 
 // Handle user navigating to URL fragment
 window.addEventListener("hashchange", () => { updatePage() });
+window.addEventListener("input", () => { console.log("change to input made") })
+window.addEventListener("move", (e) => { console.log("change to color input made", e.target.value) })
 
